@@ -39,6 +39,7 @@ export function compileFile(
 ): {
   error?: string | null;
   compiled?: string;
+  ast?: any;
 } {
   log(LogType.INFO, `Compiling ${file_name}`);
 
@@ -69,5 +70,6 @@ export function compileFile(
   return {
     error: null,
     compiled: ir,
+    ast,
   };
 }

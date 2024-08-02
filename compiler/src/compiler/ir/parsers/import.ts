@@ -1,8 +1,10 @@
 import { readFileSync } from "fs";
 import { getBuildDiPath, getLibPath, getWorkingDir } from "../../../utils/path";
 import { compileFile } from "../..";
+import LLVM from "../llvm";
+import { parseNode } from "..";
 
-export default function irImport(node: any) {
+export default function irImport(node: any, llvm: LLVM) {
   const lib_path = getLibPath();
   const module = node.module;
 
@@ -14,5 +16,5 @@ export default function irImport(node: any) {
     getBuildDiPath(getWorkingDir()),
   );
 
-  return compiled.compiled;
+  parseNode(compiled.ast[0], llvm);
 }

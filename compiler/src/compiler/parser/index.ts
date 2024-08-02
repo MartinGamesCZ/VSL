@@ -1,6 +1,8 @@
 import { log, LogType } from "../../utils/log";
 import { TokenType } from "../lexer/tokens";
 import { separatorPairs } from "./definitions";
+import parseDeclaration from "./parsers/declaration";
+import parseFunction from "./parsers/function";
 import parseImport from "./parsers/import";
 import parseInstruction from "./parsers/instruction";
 
@@ -13,6 +15,22 @@ export default function parser(tokens: { type: TokenType; value: string }[]) {
     if (token.type == TokenType.keyword) {
       if (token.value == "import") {
         const o = parseImport(token, tokens, i);
+
+        i = o.index;
+
+        ast.push(o.out);
+
+        continue;
+      } else if (token.value == "fun") {
+        const o = parseFunction(token, tokens, i);
+
+        i = o.index;
+
+        ast.push(o.out);
+
+        continue;
+      } else if (token.value == "declare") {
+        const o = parseDeclaration(token, tokens, i);
 
         i = o.index;
 
@@ -37,6 +55,7 @@ export default function parser(tokens: { type: TokenType; value: string }[]) {
     ast.push(o.tokens);*/
 
     log(LogType.ERROR, "Unexpected token");
+    console.log(token);
 
     return process.exit();
   }

@@ -1,1 +1,3 @@
-print("Lol");
+fun print(text: string): void {
+    @llvm("print", text);
+}
