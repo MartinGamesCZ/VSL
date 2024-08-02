@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import path from "path";
 import { log, LogType } from "../utils/log";
 import lexer from "./lexer";
+import parser from "./parser";
 
 export default function compileProject(
   config: {
@@ -51,6 +52,12 @@ export function compileFile(
   writeFileSync(
     path.join(build_dir, index_name + ".tokenized.json"),
     JSON.stringify(tokens, null, 2),
+  );
+
+  const ast = parser(tokens);
+  writeFileSync(
+    path.join(build_dir, index_name + ".ast.json"),
+    JSON.stringify(ast, null, 2),
   );
 
   return {
