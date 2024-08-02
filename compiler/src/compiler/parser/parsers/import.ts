@@ -1,6 +1,7 @@
 import { parseUntilScopeEnd, parseUntilSemicolon } from "..";
 import { log, LogType } from "../../../utils/log";
 import { TokenType } from "../../lexer/tokens";
+import { ASTNodeType } from "../definitions";
 
 export default function parseImport(
   token: {
@@ -75,7 +76,7 @@ export default function parseImport(
   return {
     index: r.index,
     out: {
-      type: "import",
+      type: ASTNodeType.import,
       module,
       features,
     },

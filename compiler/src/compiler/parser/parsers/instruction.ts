@@ -1,6 +1,7 @@
 import { parseUntilSemicolon } from "..";
 import { log, LogType } from "../../../utils/log";
 import { TokenType } from "../../lexer/tokens";
+import { ASTNodeType } from "../definitions";
 
 export default function parseInstruction(
   token: {
@@ -66,7 +67,7 @@ export default function parseInstruction(
   return {
     index: instruction.index + 1,
     out: {
-      type: "call",
+      type: ASTNodeType.call,
       name,
       args,
     },

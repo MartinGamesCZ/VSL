@@ -3,6 +3,8 @@ import path from "path";
 import { log, LogType } from "../utils/log";
 import lexer from "./lexer";
 import parser from "./parser";
+import intermediateRepresentation from "./ir";
+import { getBuildDiPath } from "../utils/path";
 
 export default function compileProject(
   config: {
@@ -13,7 +15,7 @@ export default function compileProject(
   const main = config.main;
   const main_path = main.startsWith("/") ? main : path.join(root_dir, main);
 
-  const build_dir = path.join(root_dir, "build");
+  const build_dir = getBuildDiPath(root_dir);
 
   if (existsSync(build_dir))
     rmSync(build_dir, {
@@ -36,6 +38,7 @@ export function compileFile(
   build_dir: string,
 ): {
   error?: string | null;
+  compiled?: string;
 } {
   log(LogType.INFO, `Compiling ${file_name}`);
 
@@ -60,7 +63,11 @@ export function compileFile(
     JSON.stringify(ast, null, 2),
   );
 
+  const ir = intermediateRepresentation(ast);
+  writeFileSync(path.join(build_dir, index_name + ".ll"), ir);
+
   return {
     error: null,
+    compiled: ir,
   };
 }
