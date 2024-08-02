@@ -33,12 +33,13 @@ export function llvmStringifyConstantUse(constant: {
   type: "string";
   value: string;
 }) {
-  const ptr_id = `ptr_${constant.id}`;
+  const ptr_id = randomUUID().replace(/-/g, "");
+  const ptr = `ptr_${ptr_id}`;
 
   const str = processString(constant.value);
 
-  const header = `%${ptr_id} = getelementptr [${str.len + 1} x i8], [${str.len + 1} x i8]* @${constant.id}, i32 0, i32 0`;
-  const use = `${types[constant.type]} %${ptr_id}`;
+  const header = `%${ptr} = getelementptr [${str.len + 1} x i8], [${str.len + 1} x i8]* @${constant.id}, i32 0, i32 0`;
+  const use = `${types[constant.type]} %${ptr}`;
 
   return { header, use };
 }

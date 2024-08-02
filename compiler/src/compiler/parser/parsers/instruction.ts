@@ -26,7 +26,7 @@ export default function parseInstruction(
 
   const instruction = parseUntilSemicolon(token, tokens, i);
 
-  const local_index = 1;
+  let local_index = 1;
   const next_token = instruction.tokens[local_index];
 
   if (next_token.type == TokenType.operator) {
@@ -62,10 +62,12 @@ export default function parseInstruction(
         return process.exit();
       }
     }
+
+    local_index += 2;
   }
 
   return {
-    index: instruction.index + 1,
+    index: instruction.index,
     out: {
       type: ASTNodeType.call,
       name,
