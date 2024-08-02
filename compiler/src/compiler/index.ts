@@ -1,6 +1,7 @@
-import { existsSync, mkdirSync, rmSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import path from "path";
 import { log, LogType } from "../utils/log";
+import lexer from "./lexer";
 
 export default function compileProject(
   config: {
@@ -20,11 +21,39 @@ export default function compileProject(
 
   mkdirSync(build_dir);
 
-  compileFile(main_path, config.main);
+  const res = compileFile(main_path, config.main, build_dir);
+
+  if (res.error) {
+    log(LogType.ERROR, res.error);
+    return process.exit();
+  }
 }
 
-export function compileFile(file_path: string, file_name: string) {
-  log(LogType.INFO, `Compiling file '${file_name}'...`);
+export function compileFile(
+  file_path: string,
+  file_name: string,
+  build_dir: string,
+): {
+  error?: string | null;
+} {
+  log(LogType.INFO, `Compiling ${file_name}`);
 
-  return;
+  const index_name = file_name.split("/").reverse()[0].split(".")[0];
+
+  if (!existsSync(file_path))
+    return {
+      error: `File '${file_name}' not found`,
+    };
+
+  const code = readFileSync(file_path, "utf-8");
+
+  const tokens = lexer(code);
+  writeFileSync(
+    path.join(build_dir, index_name + ".tokenized.json"),
+    JSON.stringify(tokens, null, 2),
+  );
+
+  return {
+    error: null,
+  };
 }
