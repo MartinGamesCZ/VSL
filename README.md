@@ -35,13 +35,13 @@ Idk, I was bored.
 #### Immutable
 
 ```vsl
-val x: int = 5
+val x: int = 5;
 ```
 
 #### Mutable
 
 ```vsl
-var x: int = 5
+var x: int = 5;
 ```
 
 ### Comments
@@ -50,6 +50,23 @@ Every line starting with # is a comment. It is ignored by the compiler.
 
 ```vsl
 # This is a comment
+# Look how pretty this comment is!
+```
+
+### Functions
+
+Functions are defined with `fun` keyword. Here are some examples of functions in VSL.
+
+```vsl
+fun getGreeting(name: string): string {
+  return core.sprintf( "Good morning, %s!", name );
+}
+
+# A function with optional arguments - PLANNED
+fun getName(optional name: string): string {
+  if (name != null) return name;
+  return "Joe";
+}
 ```
 
 ## Contributors
