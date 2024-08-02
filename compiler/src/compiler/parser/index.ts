@@ -2,6 +2,7 @@ import { log, LogType } from "../../utils/log";
 import { TokenType } from "../lexer/tokens";
 import { separatorPairs } from "./definitions";
 import parseImport from "./parsers/import";
+import parseInstruction from "./parsers/instruction";
 
 export default function parser(tokens: { type: TokenType; value: string }[]) {
   let ast = [];
@@ -19,6 +20,14 @@ export default function parser(tokens: { type: TokenType; value: string }[]) {
 
         continue;
       }
+    } else if (token.type == TokenType.identifier) {
+      const o = parseInstruction(token, tokens, i);
+
+      i = o.index;
+
+      ast.push(o.out);
+
+      continue;
     }
 
     /*const o = parseUntilSemicolon(token, tokens, i);
