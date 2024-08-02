@@ -21,6 +21,7 @@ export default class LLVM {
       id: string;
       out_type: "string" | "void";
       body: any;
+      args: any;
     }
   >();
   declarations = new Map<
@@ -41,8 +42,13 @@ export default class LLVM {
     this.constants.set(con.value, con);
   }
 
-  declareFunction(name: string, out_type: "string" | "void", body: any) {
-    const fun = llvmFunction(name, out_type, body);
+  declareFunction(
+    name: string,
+    out_type: "string" | "void",
+    body: any,
+    args: any,
+  ) {
+    const fun = llvmFunction(name, out_type, args, body);
 
     this.functions.set(name, fun);
   }

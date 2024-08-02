@@ -42,6 +42,7 @@ export function llvmStringifyDeclarationCall(
   },
   args: any,
   llvm: LLVM,
+  fun_name: string,
 ) {
   const arg_types = dec.args.map(
     (arg) => types[arg as unknown as keyof typeof types],
@@ -68,6 +69,26 @@ export function llvmStringifyDeclarationCall(
 
         return r.use;
       }
+    } else if (arg.type == TokenType.identifier) {
+      const parent_fun = llvm.functions.get(fun_name);
+
+      if (!parent_fun) {
+        log(LogType.ERROR, `Use of undeclared variable '${arg.value}'`);
+
+        return process.exit();
+      }
+
+      const pf_args = parent_fun.args;
+
+      const index = pf_args.find((a) => a.name == arg.value);
+
+      if (!index) {
+        log(LogType.ERROR, `Use of undeclared variable '${arg.value}'`);
+
+        return process.exit();
+      }
+
+      return `${types[index.type as unknown as keyof typeof types]} %${arg.value}`;
     }
   });
 

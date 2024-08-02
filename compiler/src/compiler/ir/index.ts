@@ -13,7 +13,7 @@ export default function intermediateRepresentation(ast: any) {
 
   const llvm = new LLVM();
 
-  llvm.declareFunction("@main", "void", []);
+  llvm.declareFunction("@main", "void", [], []);
 
   for (let i = 0; i < ast.length; i++) {
     const node = ast[i];
