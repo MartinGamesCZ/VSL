@@ -1,0 +1,11 @@
+var my_var_byte: byte = 0;
+var my_var_short: short = 0;
+var my_var_int: int = 0;
+var my_var_long: long = 0;
+
+var my_var_float: float = 0.0;
+
+var my_var_char: char = 'a';
+var my_var_string: string = "Hello, World!";
+
+var my_var_bool: bool = true;
