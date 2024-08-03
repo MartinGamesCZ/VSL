@@ -50,7 +50,7 @@ export function compileFile(
 
   const index_name = file_name.split("/").reverse()[0].split(".")[0];
 
-  indexes.push(index_name);
+  if (!indexes.includes(index_name)) indexes.push(index_name);
 
   if (!existsSync(file_path))
     return {
