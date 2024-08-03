@@ -72,8 +72,8 @@ fun greet(name: string): void {
 A function that takes one optional and one mandatory argument and returns string.
 
 ```vsl
-fun combineName(optional name: string, lastName: string): string {
-  # More something
+fun getFeedback(usename: string, rating: int, optional review: string): string {
+  # Crunch data
 }
 ```
 
