@@ -1,8 +1,9 @@
-import { $ } from "bun";
+import { $, spawnSync } from "bun";
 import compileProject from "../compiler";
 import { getConfig } from "../utils/config";
 import { log, LogType } from "../utils/log";
 import { getWorkingDir } from "../utils/path";
+import { exec } from "child_process";
 
 export default async function commandRun(args: string[]) {
   const root_dir = getWorkingDir();
@@ -33,5 +34,8 @@ export default async function commandRun(args: string[]) {
   log(LogType.INFO, `Project '${config.name}' compiled successfully`);
   log(LogType.INFO, "Running...\n");
 
-  await $`./build/${main_idx}`.catch((e) => e.stdout);
+  const out = spawnSync({
+    cmd: [`./build/${main_idx}`],
+    stdio: ["inherit", "inherit", "inherit"],
+  });
 }
