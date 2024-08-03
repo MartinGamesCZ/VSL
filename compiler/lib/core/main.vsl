@@ -1,3 +1,10 @@
+declare printf(string): int;
+
 fun print(text: string): void {
-    @llvm("print", text);
+    printf(text);
+}
+
+fun println(text: string): void {
+    print(text);
+    print("\n");
 }
