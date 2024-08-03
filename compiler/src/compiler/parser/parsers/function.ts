@@ -74,6 +74,7 @@ export default function parseFunction(
   }
 
   local_index++;
+  if (args.length < 1) local_index++;
 
   const type_sep = tokens[local_index];
   const type = tokens[local_index + 1];

@@ -45,7 +45,11 @@ export default function parseInstruction(
   for (let i = 2; i < instruction.tokens.length; i += 2) {
     const token = instruction.tokens[i];
 
-    if (token.type != TokenType.identifier && token.type != TokenType.literal) {
+    if (
+      token.type != TokenType.identifier &&
+      token.type != TokenType.literal &&
+      !(instruction.tokens[i - 1].type == TokenType.separator)
+    ) {
       log(LogType.ERROR, "Expected identifier");
 
       return process.exit();
