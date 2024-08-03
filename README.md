@@ -59,7 +59,7 @@ Functions are defined with `fun` keyword. Here are some examples of functions in
 
 #### Basic function
 
-A function with one argument that doesn't return anything. The `: void` is necessary.
+A function with one argument that doesn't return anything. The return type is necessary.
 
 ```vsl
 fun greet(name: string): void {
