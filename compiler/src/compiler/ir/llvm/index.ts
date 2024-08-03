@@ -105,7 +105,7 @@ export default class LLVM {
 
     main.body.push(con);
 
-    this.variables.set(name, con);
+    this.variables.set(name, con as any);
   }
 
   setConfig(config: { [key: string]: any } = {}) {

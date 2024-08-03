@@ -3,6 +3,7 @@ import { quotationMarks } from "../lexer/definitions";
 import { TokenType } from "../lexer/tokens";
 import { ASTNodeType } from "../parser/definitions";
 import LLVM from "./llvm";
+import irBinding from "./parsers/binding";
 import irCall from "./parsers/call";
 import irDeclaration from "./parsers/declaration";
 import irFunction from "./parsers/function";
@@ -54,6 +55,10 @@ export function parseNode(
 
     case ASTNodeType.variable:
       return irVariable(node, llvm);
+      break;
+
+    case ASTNodeType.binding:
+      return irBinding(node, llvm);
       break;
 
     default:

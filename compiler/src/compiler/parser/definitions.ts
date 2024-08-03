@@ -17,4 +17,5 @@ export enum ASTNodeType {
   "declaration" = "declaration",
   "variable" = "variable",
   "expression" = "expression",
+  "binding" = "binding",
 }

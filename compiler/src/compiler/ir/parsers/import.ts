@@ -29,11 +29,21 @@ export default function irImport(node: any, llvm: LLVM) {
       : n.type == ASTNodeType.function && node.features.includes(n.name),
   );
 
+  const bindings = compiled.ast.filter((n: any) =>
+    node.features == "everything"
+      ? n.type == ASTNodeType.binding
+      : n.type == ASTNodeType.binding && node.func == n.name,
+  );
+
   for (const fn of functions) {
     llvm.declare(
       fn.name,
       fn.out_type,
       fn.args.map((a: any) => a.type),
     );
+  }
+
+  for (const binding of bindings) {
+    llvm.declare(binding.name, binding.out_type, binding.args);
   }
 }

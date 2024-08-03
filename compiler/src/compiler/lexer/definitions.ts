@@ -20,6 +20,7 @@ export const keywords = [
   "from",
   "fun",
   "declare",
+  "bind",
 
   "string",
   "byte",

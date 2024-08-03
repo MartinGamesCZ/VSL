@@ -48,6 +48,8 @@ export function compileFile(
 } {
   log(LogType.INFO, `Compiling ${file_name}`);
 
+  config.file_path = file_path;
+
   const index_name = file_name.split("/").reverse()[0].split(".")[0];
 
   if (!indexes.includes(index_name)) indexes.push(index_name);
