@@ -1,4 +1,5 @@
 import {
+  comments,
   includedSeparators,
   keywords,
   literals,
@@ -19,6 +20,14 @@ export default function lexer(code: string) {
 
   for (let x = 0; x < characters.length; x++) {
     const character = characters[x];
+
+    if (comments.includes(character)) {
+      const line = getUntlineNewline(character, characters, x);
+
+      x = line.index;
+
+      continue;
+    }
 
     const t = getUntilSeparator(character, characters, x);
 
@@ -100,4 +109,26 @@ export function getUntilSeparator(
 
 export function includesQuotationMark(value: string) {
   return quotationMarks.some((q) => value.includes(q));
+}
+
+export function getUntlineNewline(c: string, chars: string[], i: number) {
+  let out = "";
+  let index = i;
+
+  for (let x = i; x < chars.length; x++) {
+    const char = chars[x];
+
+    if (char === "\n") {
+      index = x;
+
+      break;
+    }
+
+    out += char;
+  }
+
+  return {
+    value: out,
+    index,
+  };
 }

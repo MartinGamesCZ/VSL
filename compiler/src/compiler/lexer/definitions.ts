@@ -46,3 +46,4 @@ export const operators = [
   ">=",
   "<=",
 ];
+export const comments = ["#"];
