@@ -57,15 +57,23 @@ Every line starting with # is a comment. It is ignored by the compiler.
 
 Functions are defined with `fun` keyword. Here are some examples of functions in VSL.
 
-```vsl
-fun getGreeting(name: string): string {
-  return core.sprintf( "Good morning, %s!", name );
-}
+#### Basic function
 
-# A function with optional arguments - PLANNED
-fun getName(optional name: string): string {
-  if (name != null) return name;
-  return "Joe";
+A function with one argument that doesn't return anything. The `: void` is necessary.
+
+```vsl
+fun greet(name: string): void {
+  # Do something
+}
+```
+
+#### Optional arguments - PLANNED
+
+A function that takes one optional and one mandatory argument and returns string.
+
+```vsl
+fun combineName(optional name: string, lastName: string): string {
+  # More something
 }
 ```
 
