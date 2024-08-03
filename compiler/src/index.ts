@@ -13,7 +13,7 @@ const command = args[0] as keyof typeof commands;
 log(LogType.INFO, `VSL Compiler // Version 0.0.1`);
 
 if (commands[command]) {
-  commands[command](args.slice(1));
+  await commands[command](args.slice(1));
 
   process.exit();
 }

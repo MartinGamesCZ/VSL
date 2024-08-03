@@ -30,6 +30,8 @@ export default function compileProject(
     log(LogType.ERROR, res.error);
     return process.exit();
   }
+
+  return;
 }
 
 export function compileFile(
