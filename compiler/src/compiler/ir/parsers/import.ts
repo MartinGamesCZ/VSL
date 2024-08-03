@@ -3,6 +3,7 @@ import { getBuildDiPath, getLibPath, getWorkingDir } from "../../../utils/path";
 import { compileFile } from "../..";
 import LLVM from "../llvm";
 import { parseNode } from "..";
+import { ASTNodeType } from "../../parser/definitions";
 
 export default function irImport(node: any, llvm: LLVM) {
   const lib_path = getLibPath();
@@ -20,7 +21,19 @@ export default function irImport(node: any, llvm: LLVM) {
     },
   );
 
-  for (let node of compiled.ast) {
-    //parseNode(node, llvm);
+  if (!compiled.ast) return;
+
+  const functions = compiled.ast.filter((n: any) =>
+    node.features == "everything"
+      ? n.type == ASTNodeType.function
+      : n.type == ASTNodeType.function && node.features.includes(n.name),
+  );
+
+  for (const fn of functions) {
+    llvm.declare(
+      fn.name,
+      fn.out_type,
+      fn.args.map((a: any) => a.type),
+    );
   }
 }
