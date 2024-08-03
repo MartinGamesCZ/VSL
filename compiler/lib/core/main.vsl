@@ -1,4 +1,5 @@
 declare printf(string): int;
+declare system(string): int;
 
 fun print(text: string): void {
     printf(text);
@@ -7,4 +8,12 @@ fun print(text: string): void {
 fun println(text: string): void {
     print(text);
     print("\n");
+}
+
+fun executeCommand(command: string): void {
+    system(command);
+}
+
+fun clearConsole(): void {
+    executeCommand("clear");
 }
