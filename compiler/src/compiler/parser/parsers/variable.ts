@@ -1,4 +1,4 @@
-import { parseUntilScopeEnd, parseUntilSemicolon } from "..";
+import parser, { parseUntilScopeEnd, parseUntilSemicolon } from "..";
 import { log, LogType } from "../../../utils/log";
 import { TokenType } from "../../lexer/tokens";
 import { ASTNodeType } from "../definitions";
@@ -66,10 +66,7 @@ export default function parseVariable(
         type: ASTNodeType.variable,
         name: name_token.value,
         var_type: type_token.value,
-        value: {
-          type: ASTNodeType.expression,
-          value: expression,
-        },
+        value: parser(expression)[0],
       },
     };
   }

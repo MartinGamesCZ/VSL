@@ -44,6 +44,7 @@ export function llvmStringifyDeclarationCall(
   args: any,
   llvm: LLVM,
   fun_name: string,
+  with_result = false,
 ) {
   const arg_types = dec.args.map(
     (arg) => types[arg as unknown as keyof typeof types],
@@ -104,6 +105,15 @@ export function llvmStringifyDeclarationCall(
       return `${types[index.type as unknown as keyof typeof types]} %${arg.value}`;
     }
   });
+
+  if (with_result) {
+    const res_id = `res_${randomUUID().replace(/-/g, "")}`;
+
+    return {
+      header: `${headers.join("\n")}\n  %${res_id} = call ${types[dec.out_type]} (${arg_types.join(",")}) @${dec.name}(${p_args.join(",")})`,
+      use: `${types[dec.out_type]} %${res_id}`,
+    };
+  }
 
   return `${headers.join("\n")}\n  call ${types[dec.out_type]} (${arg_types.join(",")}) @${dec.name}(${p_args.join(",")})`;
 }
