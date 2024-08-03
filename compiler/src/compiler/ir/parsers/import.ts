@@ -14,7 +14,13 @@ export default function irImport(node: any, llvm: LLVM) {
     file_path,
     module,
     getBuildDiPath(getWorkingDir()),
+    {
+      no_function_rename: true,
+      no_main_function: true,
+    },
   );
 
-  parseNode(compiled.ast[0], llvm);
+  for (let node of compiled.ast) {
+    //parseNode(node, llvm);
+  }
 }

@@ -20,15 +20,18 @@ export default async function commandRun(args: string[]) {
 
   log(LogType.INFO, `Running project '${config.name}'...`);
 
-  compileProject(config, root_dir);
+  const indexes = compileProject(config, root_dir);
 
-  const idx = config.main.split("/").reverse()[0].split(".")[0];
+  const main_idx = config.main.split("/").reverse()[0].split(".")[0];
 
-  await $`llc -filetype=obj -relocation-model=pic build/${idx}.ll -o build/${idx}.o`;
-  await $`clang build/${idx}.o -pie -fPIE -o build/${idx}`;
+  for (const index of indexes) {
+    await $`llc -filetype=obj -relocation-model=pic build/${index}.ll -o build/${index}.o`;
+  }
+
+  await $`clang ${indexes.map((i) => `build/${i}.o`)} -pie -fPIE -o build/${main_idx}`;
 
   log(LogType.INFO, `Project '${config.name}' compiled successfully`);
   log(LogType.INFO, "Running...\n");
 
-  await $`./build/${idx}`.catch((e) => e.stdout);
+  await $`./build/${main_idx}`.catch((e) => e.stdout);
 }

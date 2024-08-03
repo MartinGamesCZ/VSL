@@ -8,12 +8,17 @@ import irDeclaration from "./parsers/declaration";
 import irFunction from "./parsers/function";
 import irImport from "./parsers/import";
 
-export default function intermediateRepresentation(ast: any) {
+export default function intermediateRepresentation(
+  ast: any,
+  config: { [key: string]: any } = {},
+) {
   let out: string[] = [];
 
   const llvm = new LLVM();
 
-  llvm.declareFunction("@main", "void", [], []);
+  if (!config.no_main_function) llvm.declareFunction("@main", "void", [], []);
+
+  llvm.setConfig(config);
 
   for (let i = 0; i < ast.length; i++) {
     const node = ast[i];

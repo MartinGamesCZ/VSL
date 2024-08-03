@@ -34,6 +34,8 @@ export default class LLVM {
   >();
   headers: string[] = [];
 
+  config: { [key: string]: any } = {};
+
   constructor() {}
 
   declareValue(type: "string", value: string) {
@@ -78,6 +80,10 @@ export default class LLVM {
     }
 
     fun.body.push(this.callFunction(name, args));
+  }
+
+  setConfig(config: { [key: string]: any } = {}) {
+    this.config = config;
   }
 
   _stringifyConstants() {

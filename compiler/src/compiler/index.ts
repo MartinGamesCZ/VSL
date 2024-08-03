@@ -6,6 +6,8 @@ import parser from "./parser";
 import intermediateRepresentation from "./ir";
 import { getBuildDiPath } from "../utils/path";
 
+let indexes: string[] = [];
+
 export default function compileProject(
   config: {
     [key: string]: any;
@@ -31,13 +33,14 @@ export default function compileProject(
     return process.exit();
   }
 
-  return;
+  return indexes;
 }
 
 export function compileFile(
   file_path: string,
   file_name: string,
   build_dir: string,
+  config: { [key: string]: any } = {},
 ): {
   error?: string | null;
   compiled?: string;
@@ -46,6 +49,8 @@ export function compileFile(
   log(LogType.INFO, `Compiling ${file_name}`);
 
   const index_name = file_name.split("/").reverse()[0].split(".")[0];
+
+  indexes.push(index_name);
 
   if (!existsSync(file_path))
     return {
@@ -66,7 +71,7 @@ export function compileFile(
     JSON.stringify(ast, null, 2),
   );
 
-  const ir = intermediateRepresentation(ast);
+  const ir = intermediateRepresentation(ast, config);
   writeFileSync(path.join(build_dir, index_name + ".ll"), ir);
 
   return {
