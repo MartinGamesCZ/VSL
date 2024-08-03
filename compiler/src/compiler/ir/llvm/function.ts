@@ -46,7 +46,7 @@ export function llvmStringifyFunction(
   const no_rename = llvm.config.no_function_rename;
 
   return `; Function ${fun.name}
-define ${types[fun.out_type]} @${fun.name == "@main" ? "main" : no_rename ? fun.name : fun.id}(${args.join("\n")}) {\nentry:\n${body}\n\n  ret ${types[fun.out_type]}\n}`;
+define ${types[fun.out_type]} @${fun.name == "@main" ? "main" : no_rename ? fun.name : fun.id}(${args.join(", ")}) {\nentry:\n${body}\n\n  ret ${types[fun.out_type]}\n}`;
 }
 
 function llvmStringifyFunctionBody(body: any, llvm: LLVM, fun_name: string) {
