@@ -8,7 +8,7 @@ import { log, LogType } from "../../../utils/log";
 import type LLVM from ".";
 import { TokenType } from "../../lexer/tokens";
 import { getLiteralType, parseNode, stripQuotationMarks } from "..";
-import { llvmStringifyConstantUse } from "./constant";
+import { llvmStringifyConstantUse, processString } from "./constant";
 
 export default function llvmFunction(
   name: string,
@@ -43,7 +43,10 @@ export function llvmStringifyFunction(
     return `${types[arg.type as unknown as keyof typeof types]} %${arg.name}`;
   });
 
-  return `define ${types[fun.out_type]} @${fun.name == "@main" ? "main" : fun.id}(${args.join("\n")}) {\nentry:\n${body}\n\n  ret ${types[fun.out_type]}\n}`;
+  const no_rename = llvm.config.no_function_rename;
+
+  return `; Function ${fun.name}
+define ${types[fun.out_type]} @${fun.name == "@main" ? "main" : no_rename ? fun.name : fun.id}(${args.join("\n")}) {\nentry:\n${body}\n\n  ret ${types[fun.out_type]}\n}`;
 }
 
 function llvmStringifyFunctionBody(body: any, llvm: LLVM, fun_name: string) {
@@ -97,12 +100,14 @@ export function llvmStringifyFunctionCall(
       const t = getLiteralType(arg);
 
       if (t == "string") {
-        const dec = llvm.constants.get(stripQuotationMarks(arg.value));
+        const dec = llvm.constants.get(
+          processString(stripQuotationMarks(arg.value)).str,
+        );
 
         if (!dec) {
-          log(LogType.ERROR, `Use of undeclared variable`);
+          log(LogType.ERROR, `Use of undeclared variable '${arg.value}'`);
 
-          return;
+          return process.exit();
         }
 
         const r = llvmStringifyConstantUse(dec);
@@ -111,8 +116,30 @@ export function llvmStringifyFunctionCall(
 
         return r.use;
       }
+    } else if (arg.type == TokenType.identifier) {
+      const parent_fun = fun;
+
+      if (!parent_fun) {
+        log(LogType.ERROR, `Use of undeclared variable '${arg.value}'`);
+
+        return process.exit();
+      }
+
+      const pf_args = parent_fun.args;
+
+      const index = pf_args.find((a: any) => a.name == arg.value);
+
+      if (!index) {
+        log(LogType.ERROR, `Use of undeclared variable '${arg.value}'`);
+
+        return process.exit();
+      }
+
+      return `${types[index.type as unknown as keyof typeof types]} %${arg.value}`;
     }
   });
 
-  return `${headers.join("\n")}\n  call ${types[fun.out_type]} (${arg_types.join(",")}) @${fun.id}(${p_args.join(",")})`;
+  const no_rename = llvm.config.no_function_rename;
+
+  return `${headers.join("\n")}\n  call ${types[fun.out_type]} (${arg_types.join(",")}) @${no_rename ? fun.name : fun.id}(${p_args.join(",")})`;
 }

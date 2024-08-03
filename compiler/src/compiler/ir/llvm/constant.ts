@@ -38,7 +38,7 @@ export function llvmStringifyConstantUse(constant: {
 
   const str = processString(constant.value);
 
-  const header = `%${ptr} = getelementptr [${str.len + 1} x i8], [${str.len + 1} x i8]* @${constant.id}, i32 0, i32 0`;
+  const header = `  %${ptr} = getelementptr [${str.len + 1} x i8], [${str.len + 1} x i8]* @${constant.id}, i32 0, i32 0`;
   const use = `${types[constant.type]} %${ptr}`;
 
   return { header, use };
@@ -56,6 +56,11 @@ export function processString(str: string) {
     },
   };
 
+  const c = {
+    "\\0A": 1,
+    "\\00": 1,
+  };
+
   let out = str;
   let len = str.length;
 
@@ -65,6 +70,10 @@ export function processString(str: string) {
     let n = out.split(key).length - 1;
 
     out = out.replaceAll(key, val.replace);
+
+    if (Object.keys(c).find((a) => out.includes(a))) {
+      n++;
+    }
 
     len += n * (val.length - 2);
   }

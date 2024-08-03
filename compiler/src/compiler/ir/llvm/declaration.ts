@@ -2,7 +2,7 @@ import { randomUUID } from "crypto";
 import { types } from "./types";
 import { TokenType } from "../../lexer/tokens";
 import { getLiteralType, stripQuotationMarks } from "..";
-import { llvmStringifyConstantUse } from "./constant";
+import { llvmStringifyConstantUse, processString } from "./constant";
 import type LLVM from ".";
 import { log, LogType } from "../../../utils/log";
 
@@ -55,12 +55,14 @@ export function llvmStringifyDeclarationCall(
       const t = getLiteralType(arg);
 
       if (t == "string") {
-        const dec = llvm.constants.get(stripQuotationMarks(arg.value));
+        const dec = llvm.constants.get(
+          stripQuotationMarks(processString(arg.value).str),
+        );
 
         if (!dec) {
-          log(LogType.ERROR, `Use of undeclared variable`);
+          log(LogType.ERROR, `Use of undeclared variable '${arg.value}'`);
 
-          return;
+          return process.exit();
         }
 
         const r = llvmStringifyConstantUse(dec);
@@ -80,7 +82,7 @@ export function llvmStringifyDeclarationCall(
 
       const pf_args = parent_fun.args;
 
-      const index = pf_args.find((a) => a.name == arg.value);
+      const index = pf_args.find((a: any) => a.name == arg.value);
 
       if (!index) {
         log(LogType.ERROR, `Use of undeclared variable '${arg.value}'`);
@@ -92,5 +94,5 @@ export function llvmStringifyDeclarationCall(
     }
   });
 
-  return `${headers.join("\n")}\ncall ${types[dec.out_type]} (${arg_types.join(",")}) @${dec.name}(${p_args.join(",")})`;
+  return `${headers.join("\n")}\n  call ${types[dec.out_type]} (${arg_types.join(",")}) @${dec.name}(${p_args.join(",")})`;
 }

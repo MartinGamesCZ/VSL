@@ -1,6 +1,6 @@
 import { log, LogType } from "../../../utils/log";
 import llvmCall from "./call";
-import llvmConstant, { llvmStringifyConstant } from "./constant";
+import llvmConstant, { llvmStringifyConstant, processString } from "./constant";
 import llvmDeclaration, { llvmStringifyDeclaration } from "./declaration";
 import llvmFunction, { llvmStringifyFunction } from "./function";
 
@@ -37,6 +37,7 @@ export default class LLVM {
   constructor() {}
 
   declareValue(type: "string", value: string) {
+    value = processString(value).str;
     const con = llvmConstant(`_val`, type, value);
 
     this.constants.set(con.value, con);
@@ -114,9 +115,9 @@ export default class LLVM {
   }
 
   get() {
+    const functions = this._stringifyFunctions();
     const constants = this._stringifyConstants();
     const headers = this._stringifyHeaders();
-    const functions = this._stringifyFunctions();
     const declarations = this._stringifyDeclarations();
 
     return `${headers.length > 0 ? `${headers}\n\n` : ""}${constants.length > 0 ? `${constants}\n\n` : ""}${declarations.length > 0 ? `${declarations}\n\n` : ""}${functions.length > 0 ? `${functions}\n\n` : ""}`;
