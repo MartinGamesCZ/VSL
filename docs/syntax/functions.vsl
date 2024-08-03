@@ -1,0 +1,11 @@
+fun greet(name: string): void {
+  # Greet the person
+}
+
+fun calculateSurface(width: int, height: int): int {
+  # Do some math
+}
+
+fun killProcess(pid: int): bool {
+  # Unalive the process
+}
