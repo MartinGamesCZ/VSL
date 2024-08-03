@@ -3,6 +3,7 @@ import llvmCall from "./call";
 import llvmConstant, { llvmStringifyConstant, processString } from "./constant";
 import llvmDeclaration, { llvmStringifyDeclaration } from "./declaration";
 import llvmFunction, { llvmStringifyFunction } from "./function";
+import llvmVariable from "./variable";
 
 export default class LLVM {
   constants = new Map<
@@ -30,6 +31,15 @@ export default class LLVM {
       name: string;
       out_type: "string" | "void";
       args: string[];
+    }
+  >();
+  variables = new Map<
+    string,
+    {
+      type: "variable";
+      name: string;
+      var_type: "string";
+      value: any;
     }
   >();
   headers: string[] = [];
@@ -80,6 +90,22 @@ export default class LLVM {
     }
 
     fun.body.push(this.callFunction(name, args));
+  }
+
+  declareVariable(name: string, type: "string", value: any) {
+    const con = llvmVariable(name, type, value, this);
+
+    const main = this.functions.get("@main");
+
+    if (!main) {
+      log(LogType.ERROR, `Main function not found!`);
+
+      return process.exit();
+    }
+
+    main.body.push(con);
+
+    this.variables.set(name, con);
   }
 
   setConfig(config: { [key: string]: any } = {}) {

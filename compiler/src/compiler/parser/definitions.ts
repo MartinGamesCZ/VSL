@@ -15,4 +15,6 @@ export enum ASTNodeType {
   "call" = "call",
   "function" = "function",
   "declaration" = "declaration",
+  "variable" = "variable",
+  "expression" = "expression",
 }

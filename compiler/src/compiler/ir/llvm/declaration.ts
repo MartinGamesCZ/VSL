@@ -5,6 +5,7 @@ import { getLiteralType, stripQuotationMarks } from "..";
 import { llvmStringifyConstantUse, processString } from "./constant";
 import type LLVM from ".";
 import { log, LogType } from "../../../utils/log";
+import { llvmStringifyVariableUse } from "./variable";
 
 export default function llvmDeclaration(
   name: string,
@@ -78,6 +79,16 @@ export function llvmStringifyDeclarationCall(
         log(LogType.ERROR, `Use of undeclared variable '${arg.value}'`);
 
         return process.exit();
+      }
+
+      const vari = llvm.variables.get(arg.value);
+
+      if (vari) {
+        const s = llvmStringifyVariableUse(vari, llvm);
+
+        headers.push(s.header);
+
+        return s.use;
       }
 
       const pf_args = parent_fun.args;

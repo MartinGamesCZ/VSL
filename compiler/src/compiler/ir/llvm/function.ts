@@ -9,6 +9,7 @@ import type LLVM from ".";
 import { TokenType } from "../../lexer/tokens";
 import { getLiteralType, parseNode, stripQuotationMarks } from "..";
 import { llvmStringifyConstantUse, processString } from "./constant";
+import { llvmStringifyVariable, llvmStringifyVariableAssign } from "./variable";
 
 export default function llvmFunction(
   name: string,
@@ -68,6 +69,9 @@ function llvmStringifyFunctionBody(body: any, llvm: LLVM, fun_name: string) {
       out.push(llvmStringifyFunctionCall(call.fun, call.args, llvm));
     } else if (call.type == "call") {
       parseNode(call, llvm, fun_name);
+    } else if (call.type == "variable") {
+      out.push(llvmStringifyVariable(call, llvm));
+      out.push(llvmStringifyVariableAssign(call, llvm));
     } else {
       log(LogType.ERROR, `Unknown call type ${call.type}`);
 

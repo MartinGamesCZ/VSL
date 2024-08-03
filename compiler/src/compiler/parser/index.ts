@@ -5,6 +5,7 @@ import parseDeclaration from "./parsers/declaration";
 import parseFunction from "./parsers/function";
 import parseImport from "./parsers/import";
 import parseInstruction from "./parsers/instruction";
+import parseVariable from "./parsers/variable";
 
 export default function parser(tokens: { type: TokenType; value: string }[]) {
   let ast = [];
@@ -31,6 +32,14 @@ export default function parser(tokens: { type: TokenType; value: string }[]) {
         continue;
       } else if (token.value == "declare") {
         const o = parseDeclaration(token, tokens, i);
+
+        i = o.index;
+
+        ast.push(o.out);
+
+        continue;
+      } else if (token.value == "var") {
+        const o = parseVariable(token, tokens, i);
 
         i = o.index;
 
