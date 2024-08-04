@@ -25,6 +25,11 @@ export default function compileProject(
     });
 
   mkdirSync(build_dir);
+  mkdirSync(path.join(build_dir, "linux_x86-64"));
+  mkdirSync(path.join(build_dir, "linux_x86-64/debug"));
+  mkdirSync(path.join(build_dir, "linux_x86-64/build"));
+  mkdirSync(path.join(build_dir, "linux_x86-64/build/llvm"));
+  mkdirSync(path.join(build_dir, "linux_x86-64/build/object"));
 
   const res = compileFile(main_path, config.main, build_dir);
 
@@ -63,18 +68,21 @@ export function compileFile(
 
   const tokens = lexer(code);
   writeFileSync(
-    path.join(build_dir, index_name + ".tokenized.json"),
+    path.join(build_dir, "linux_x86-64/debug", index_name + ".tokenized.json"),
     JSON.stringify(tokens, null, 2),
   );
 
   const ast = parser(tokens);
   writeFileSync(
-    path.join(build_dir, index_name + ".ast.json"),
+    path.join(build_dir, "linux_x86-64/debug", index_name + ".ast.json"),
     JSON.stringify(ast, null, 2),
   );
 
   const ir = intermediateRepresentation(ast, config);
-  writeFileSync(path.join(build_dir, index_name + ".ll"), ir);
+  writeFileSync(
+    path.join(build_dir, "linux_x86-64/build/llvm", index_name + ".ll"),
+    ir,
+  );
 
   return {
     error: null,
