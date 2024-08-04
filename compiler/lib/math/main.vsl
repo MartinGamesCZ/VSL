@@ -1,1 +1,4 @@
 bind add(int, int): int;
+bind subtract(int, int): int;
+bind multiply(int, int): int;
+bind divide(int, int): int;
