@@ -52,7 +52,9 @@ export function llvmStringifyVariableAssign(
 ) {
   if (variable.value.type == "literal") {
     if (variable.var_type == "string") {
-      const p_val = processString(stripQuotationMarks(variable.value)).str;
+      const p_val = processString(
+        stripQuotationMarks(variable.value.value),
+      ).str;
       const val = llvm.constants.get(p_val);
 
       if (!val) {
